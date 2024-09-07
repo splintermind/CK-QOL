@@ -19,13 +19,12 @@
         "",
         "",
         "CoreLib",
-        "CoreLib.Resources",
         "CoreLib.RewiredExtension",
         "CoreLib.Localization"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": true,
     "precompiledReferences": [
         "Accessibility.dll",
