@@ -1,8 +1,7 @@
 #pragma warning disable 0219
 #line 1 "D:/CK-ModSDK/Temp/GeneratedCode/CK-QOL-Collection//NoDeathPenaltySystem__System_19510078270.g.cs"
-using CK_QOL_Collection.Core.Configuration;
+using CK_QOL_Collection.Core.Feature;
 using Inventory;
-using Unity.Burst;
 using Unity.Entities;
 using Unity.NetCode;
 namespace CK_QOL_Collection.Features.NoDeathPenalty.Systems
@@ -11,63 +10,63 @@ namespace CK_QOL_Collection.Features.NoDeathPenalty.Systems
     public partial class NoDeathPenaltySystem
     {
         [global::Unity.Entities.DOTSCompilerPatchedMethod("OnUpdate_T0")]
-		void __OnUpdate_450AADF4()
-		{
-			#line 37 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
-			if (!ConfigurationManager.IsModEnabled)
-			#line 38 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
-			{
-				#line 39 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
-				return;
-			}
-			#line 42 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
 
-			var initialMoveInventoryFromLookup = GetComponentLookup<InitialMoveInventoryFromCD>();
-			#line 44 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
+        
+        
+        
+        void __OnUpdate_450AADF4()
+        {
+            #line 34 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
+            var noDeathPenaltyFeature = FeatureManager.Instance.GetFeature<NoDeathPenaltyFeature>();
+            #line 35 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
+            if (noDeathPenaltyFeature is not { IsEnabled: true })
+            #line 36 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
+            {
+                #line 37 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
+                return;
+            }
+                        #line 40 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
+            
+            var initialMoveInventoryFromLookup = GetComponentLookup<InitialMoveInventoryFromCD>();
+                        #line 43 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
 
-			NoDeathPenaltySystem_6C1B8903_LambdaJob_0_Execute(initialMoveInventoryFromLookup);
-			#line 59 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
+                        NoDeathPenaltySystem_6C1B8903_LambdaJob_0_Execute(initialMoveInventoryFromLookup);
+            #line 53 "D:/CK-ModSDK/Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
 
-			base.OnUpdate();
+            base.OnUpdate();
 #line hidden
-		}
+        }
 
-        #line 36 "D:/CK-ModSDK/Temp/GeneratedCode/CK-QOL-Collection//NoDeathPenaltySystem__System_19510078270.g.cs"
+        #line 41 "D:/CK-ModSDK/Temp/GeneratedCode/CK-QOL-Collection//NoDeathPenaltySystem__System_19510078270.g.cs"
         [global::Unity.Burst.NoAlias]
         [global::Unity.Burst.BurstCompile]
         struct NoDeathPenaltySystem_6C1B8903_LambdaJob_0_Job : global::Unity.Entities.IJobChunk
         {
             public global::Unity.Entities.ComponentLookup<global::InitialMoveInventoryFromCD> initialMoveInventoryFromLookup;
             [global::Unity.Collections.ReadOnly] public global::Unity.Entities.EntityTypeHandle __entityTypeHandle;
+            public global::Unity.Entities.ComponentTypeHandle<global::InitialMoveInventoryFromCD> __initialMoveInventoryFromCDTypeHandle;
             
             [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-            void OriginalLambdaBody(global::Unity.Entities.Entity entity)
+            void OriginalLambdaBody(global::Unity.Entities.Entity entity, [Unity.Burst.NoAlias] ref global::InitialMoveInventoryFromCD initialMoveInventoryFromCD)
             {
-#line 47 "D:\CK-ModSDK\Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
+#line 48 "D:\CK-ModSDK\Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
 initialMoveInventoryFromLookup.SetComponentEnabled(entity, false);
-#line 49 "D:\CK-ModSDK\Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
-var initialMoveInventoryFromCD = initialMoveInventoryFromLookup.GetRefRW(entity).ValueRW;
 #line 50 "D:\CK-ModSDK\Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
-if (initialMoveInventoryFromCD.entityFrom == Entity.Null)
-				{
-#line 52 "D:\CK-ModSDK\Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
-return;
-				}
-#line 56 "D:\CK-ModSDK\Assets/CK-QOL-Collection/Features/NoDeathPenalty/Systems/NoDeathPenaltySystem.cs"
 initialMoveInventoryFromCD.entityFrom = Entity.Null;
-			}
-            #line 60 "D:/CK-ModSDK/Temp/GeneratedCode/CK-QOL-Collection//NoDeathPenaltySystem__System_19510078270.g.cs"
+                }
+            #line 58 "D:/CK-ModSDK/Temp/GeneratedCode/CK-QOL-Collection//NoDeathPenaltySystem__System_19510078270.g.cs"
             [global::System.Runtime.CompilerServices.CompilerGenerated]
             public void Execute(in global::Unity.Entities.ArchetypeChunk chunk, int batchIndex, bool useEnabledMask, in global::Unity.Burst.Intrinsics.v128 chunkEnabledMask)
             {
-                #line 64 "D:/CK-ModSDK/Temp/GeneratedCode/CK-QOL-Collection//NoDeathPenaltySystem__System_19510078270.g.cs"
+                #line 62 "D:/CK-ModSDK/Temp/GeneratedCode/CK-QOL-Collection//NoDeathPenaltySystem__System_19510078270.g.cs"
                 var __entityArrayPtr = global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetChunkEntityArrayIntPtr(chunk, __entityTypeHandle);
+                var initialMoveInventoryFromCDArrayPtr = global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetChunkNativeArrayIntPtr<global::InitialMoveInventoryFromCD>(chunk, ref __initialMoveInventoryFromCDTypeHandle);
                 int chunkEntityCount = chunk.Count;
                 if (!useEnabledMask)
                 {
                     for(var entityIndex = 0; entityIndex < chunkEntityCount; ++entityIndex)
                     {
-                        OriginalLambdaBody(global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetCopyOfNativeArrayPtrElement<global::Unity.Entities.Entity>(__entityArrayPtr, entityIndex));
+                        OriginalLambdaBody(global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetCopyOfNativeArrayPtrElement<global::Unity.Entities.Entity>(__entityArrayPtr, entityIndex), ref global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetRefToNativeArrayPtrElement<global::InitialMoveInventoryFromCD>(initialMoveInventoryFromCDArrayPtr, entityIndex));
                     }
                 }
                 else
@@ -82,7 +81,7 @@ initialMoveInventoryFromCD.entityFrom = Entity.Null;
                         {
                             while (entityIndex < batchEndIndex)
                             {
-                                OriginalLambdaBody(global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetCopyOfNativeArrayPtrElement<global::Unity.Entities.Entity>(__entityArrayPtr, entityIndex));
+                                OriginalLambdaBody(global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetCopyOfNativeArrayPtrElement<global::Unity.Entities.Entity>(__entityArrayPtr, entityIndex), ref global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetRefToNativeArrayPtrElement<global::InitialMoveInventoryFromCD>(initialMoveInventoryFromCDArrayPtr, entityIndex));
                                 entityIndex++;
                             }
                         }
@@ -95,7 +94,7 @@ initialMoveInventoryFromCD.entityFrom = Entity.Null;
                         {
                             if ((mask64 & 1) != 0)
                             {
-                                OriginalLambdaBody(global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetCopyOfNativeArrayPtrElement<global::Unity.Entities.Entity>(__entityArrayPtr, entityIndex));
+                                OriginalLambdaBody(global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetCopyOfNativeArrayPtrElement<global::Unity.Entities.Entity>(__entityArrayPtr, entityIndex), ref global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetRefToNativeArrayPtrElement<global::InitialMoveInventoryFromCD>(initialMoveInventoryFromCDArrayPtr, entityIndex));
                             }
                             mask64 >>= 1;
                         }
@@ -104,7 +103,7 @@ initialMoveInventoryFromCD.entityFrom = Entity.Null;
                         {
                             if ((mask64 & 1) != 0)
                             {
-                                OriginalLambdaBody(global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetCopyOfNativeArrayPtrElement<global::Unity.Entities.Entity>(__entityArrayPtr, entityIndex));
+                                OriginalLambdaBody(global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetCopyOfNativeArrayPtrElement<global::Unity.Entities.Entity>(__entityArrayPtr, entityIndex), ref global::Unity.Entities.Internal.InternalCompilerInterface.UnsafeGetRefToNativeArrayPtrElement<global::InitialMoveInventoryFromCD>(initialMoveInventoryFromCDArrayPtr, entityIndex));
                             }
                             mask64 >>= 1;
                         }
@@ -115,24 +114,28 @@ initialMoveInventoryFromCD.entityFrom = Entity.Null;
         void NoDeathPenaltySystem_6C1B8903_LambdaJob_0_Execute(global::Unity.Entities.ComponentLookup<global::InitialMoveInventoryFromCD> initialMoveInventoryFromLookup)
         {
             __TypeHandle.__Unity_Entities_Entity_TypeHandle.Update(ref this.CheckedStateRef);
+            __TypeHandle.__InitialMoveInventoryFromCD_RW_ComponentTypeHandle.Update(ref this.CheckedStateRef);
             var __job = new NoDeathPenaltySystem_6C1B8903_LambdaJob_0_Job
             {
                 initialMoveInventoryFromLookup = initialMoveInventoryFromLookup,
-                __entityTypeHandle = __TypeHandle.__Unity_Entities_Entity_TypeHandle
+                __entityTypeHandle = __TypeHandle.__Unity_Entities_Entity_TypeHandle,
+                __initialMoveInventoryFromCDTypeHandle = __TypeHandle.__InitialMoveInventoryFromCD_RW_ComponentTypeHandle
             };
             
-            this.CheckedStateRef.Dependency = global::Unity.Entities.Internal.InternalCompilerInterface.JobChunkInterface.Schedule(__job, __query_1451888473_0, this.CheckedStateRef.Dependency);
+            this.CheckedStateRef.Dependency = global::Unity.Entities.Internal.InternalCompilerInterface.JobChunkInterface.Schedule(__job, __query_1451888472_0, this.CheckedStateRef.Dependency);
         }
         
         TypeHandle __TypeHandle;
-        global::Unity.Entities.EntityQuery __query_1451888473_0;
+        global::Unity.Entities.EntityQuery __query_1451888472_0;
         struct TypeHandle
         {
             [global::Unity.Collections.ReadOnly] public global::Unity.Entities.EntityTypeHandle __Unity_Entities_Entity_TypeHandle;
+            public Unity.Entities.ComponentTypeHandle<global::InitialMoveInventoryFromCD> __InitialMoveInventoryFromCD_RW_ComponentTypeHandle;
             [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
             public void __AssignHandles(ref global::Unity.Entities.SystemState state)
             {
                 __Unity_Entities_Entity_TypeHandle = state.GetEntityTypeHandle();
+                __InitialMoveInventoryFromCD_RW_ComponentTypeHandle = state.GetComponentTypeHandle<global::InitialMoveInventoryFromCD>(false);
             }
             
         }
@@ -140,9 +143,9 @@ initialMoveInventoryFromCD.entityFrom = Entity.Null;
         void __AssignQueries(ref global::Unity.Entities.SystemState state)
         {
             var entityQueryBuilder = new global::Unity.Entities.EntityQueryBuilder(global::Unity.Collections.Allocator.Temp);
-            __query_1451888473_0 = 
+            __query_1451888472_0 = 
                 entityQueryBuilder
-                    .WithAll<global::InitialMoveInventoryFromCD>()
+                    .WithAllRW<global::InitialMoveInventoryFromCD>()
                     .Build(ref state);
             entityQueryBuilder.Reset();
             entityQueryBuilder.Dispose();
