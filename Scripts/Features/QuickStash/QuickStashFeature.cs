@@ -1,4 +1,5 @@
-﻿using CK_QOL_Collection.Core.Configuration;
+﻿using System.Linq;
+using CK_QOL_Collection.Core.Configuration;
 using CK_QOL_Collection.Core.Feature;
 using CK_QOL_Collection.Core.Helpers;
 using CK_QOL_Collection.Features.QuickStash.KeyBinds;
@@ -49,26 +50,22 @@ namespace CK_QOL_Collection.Features.QuickStash
 
             var player = Manager.main.player;
             var maxDistance = Config.Distance;
-            var nearbyChests = ChestHelper.GetNearbyChests(maxDistance);
+            var chestLimit = Config.ChestLimit;
+
+            var nearbyChests = ChestHelper.GetNearbyChests(maxDistance)
+                .Take(chestLimit)
+                .ToList();
 
             var stashedIntoChestsCount = 0;
-            foreach (var chest in nearbyChests)
+            foreach (var inventoryHandler in nearbyChests.Select(chest => chest.inventoryHandler).Where(inventoryHandler => inventoryHandler != null))
             {
-                var inventoryHandler = chest.inventoryHandler;
-                if (inventoryHandler == null)
-                {
-                    continue;
-                }
-
-                // Perform the quick stash action.
                 player.playerInventoryHandler.QuickStack(player, inventoryHandler);
                 stashedIntoChestsCount++;
             }
 
-            //TODO: Get a list of stashed items to display.
             TextHelper.DisplayText(stashedIntoChestsCount == 0 
-                ? "Nothing stashed!" 
-                : $"Stashed into {stashedIntoChestsCount} chests.", rarity: Rarity.Rare);
+                ? "Quick Stash: No chests found!" 
+                : $"Quick Stash: {stashedIntoChestsCount} chests.", Rarity.Legendary);
         }
 
         /// <inheritdoc />
