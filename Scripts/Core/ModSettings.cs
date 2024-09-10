@@ -1,28 +1,13 @@
-namespace CK_QOL_Collection.Core
+namespace CK_QOL.Core
 {
-	/// <summary>
-	///     Contains global settings and constants for the CK QOL Collection mod.
-	/// </summary>
 	internal static class ModSettings
 	{
-		/// <summary>
-		///     The version of the mod.
-		/// </summary>
-		public const string Version = "1.5.0";
+		public const string Name = "CK QOF";
+		
+		public const string ShortName = "CK_QOL";
+		
+		public const string Version = "1.5.1";
 
-		/// <summary>
-		///     The name of the mod.
-		/// </summary>
-		public const string Name = "CK QOF Collection";
-
-		/// <summary>
-		///     The author of the mod.
-		/// </summary>
 		public const string Author = "DrSalzstreuer";
-
-		/// <summary>
-		///     The prefix used for all key bindings in the mod.
-		/// </summary>
-		public const string KeyBindPrefix = "CK_QOL";
 	}
 }

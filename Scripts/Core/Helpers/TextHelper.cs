@@ -1,27 +1,32 @@
 using System.Collections.Generic;
-using CK_QOL_Collection.Core.Patches;
+using CK_QOL.Core.Patches;
 
-namespace CK_QOL_Collection.Core.Helpers
+namespace CK_QOL.Core.Helpers
 {
 	/// <summary>
-	///		Provides utility methods for displaying text notifications in the CK QOL Collection mod.
-	///		This class handles the formatting and queueing of item discovery notifications to ensure they are displayed correctly.
+	///		Provides utility methods for displaying custom text notifications.
 	/// </summary>
+	/// <remarks>
+	///		Uses the in-game functionality of text displaying when discovery new items.
+	/// </remarks>
+	/// <seealso cref="ItemDiscoveryUIPatches"/>
+	/// <seealso cref="ItemDiscoveryTextUIPatches"/>
 	internal static class TextHelper
 	{
 		/// <summary>
-		///		Displays a notification text for a discovered item with a specific rarity.
-		///		Adds the text to the notification queue to be processed by <see cref="ItemDiscoveryUIPatches"/>.
+		///		Displays a colored notification text defined by the rarity.		
 		/// </summary>
-		/// <param name="text">The text to be displayed for the discovered item.</param>
-		/// <param name="rarity">The rarity of the discovered item.</param>
-		internal static void DisplayText(string text, Rarity rarity)
+		/// <param name="text">The text to be displayed.</param>
+		/// <param name="rarity">The rarity to control the color.</param>
+		/// <remarks>
+		///		Adds the text to the notification queue to be processed by <see cref="ItemDiscoveryUIPatches"/>.
+		/// </remarks>
+		/// <seealso cref="UIManager.ShowDiscoveredItemText"/>
+		internal static void DisplayText(string text, Rarity rarity = Rarity.Poor)
 		{
-			// Prefix the text to distinguish it as a mod-related discovery.
-			var modText = $"-CK-QOL-{text}";
+			text = $"{ModSettings.ShortName}{text}";
 
-			// Use the game's UI manager to show the discovered item text.
-			Manager.ui.ShowDiscoveredItemText(new List<string> { modText }, rarity);
+			Manager.ui.ShowDiscoveredItemText(new List<string> { text }, rarity);
 		}
 	}
 }

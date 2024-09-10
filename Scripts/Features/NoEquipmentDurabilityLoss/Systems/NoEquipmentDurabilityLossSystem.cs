@@ -1,38 +1,49 @@
-using CK_QOL_Collection.Core.Feature;
 using PlayerEquipment;
 using Unity.Entities;
 
-namespace CK_QOL_Collection.Features.NoEquipmentDurabilityLoss.Systems
+namespace CK_QOL.Features.NoEquipmentDurabilityLoss.Systems
 {
     /// <summary>
-    ///     Represents a system that disables durability loss for player equipment and items.
-    ///     This system ensures that durability is not reduced when specific triggers are active.
+    ///     Represents the system responsible for preventing equipment durability loss within the game. 
+    ///     This system operates on the server-side simulation to ensure that all equipment remains at maximum durability and does not degrade over time or through use.
+    ///     
+    ///     The system performs the following functions:
+    ///     <list type="bullet">
+    ///         <item>
+    ///             <description>Disables durability reduction triggers for all equipment,
+    ///             ensuring that no durability loss occurs by setting damage values and percentages to zero and disabling associated components.</description>
+    ///         </item>
+    ///         <item>
+    ///             <description>Resets the durability of all equipped items to their maximum values,
+///                 maintaining full durability for all equipment regardless of in-game actions.</description>
+    ///         </item>
+    ///     </list>
+    ///     
+    ///     This system is controlled by the <see cref="NoEquipmentDurabilityLoss"/> feature,
+    ///     which provides configuration settings and determines whether the system should be active based on the feature's enabled state.
     /// </summary>
+    /// <remarks>
+    ///     The <see cref="NoEquipmentDurabilityLossSystem"/> class extends <see cref="PugSimulationSystemBase"/> to integrate with the game's server-side simulation framework,
+    ///     running in the server simulation context to ensure that equipment durability loss is effectively prevented in real-time.
+    /// </remarks>
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(EndPredictedSimulationSystemGroup))]
     [UpdateBefore(typeof(ChangeDurabilitySystem))]
     public partial class NoEquipmentDurabilityLossSystem : PugSimulationSystemBase
     {
-        private bool _isEnabled;
-
-        /// <summary>
-        ///     Called when the system is created.
-        ///     Ensures that the system requires the appropriate components for execution.
-        /// </summary>
         protected override void OnCreate()
         {
+            if (!NoEquipmentDurabilityLoss.Instance.IsEnabled)
+            {
+                return;
+            }
+            
             base.OnCreate();
-
-            var noEquipmentDurabilityLossFeature = FeatureManager.Instance.GetFeature<NoEquipmentDurabilityLossFeature>();
-            _isEnabled = noEquipmentDurabilityLossFeature?.IsEnabled ?? false;
         }
 
-        /// <summary>
-        ///     Updates the system, modifying durability loss triggers to prevent equipment damage.
-        /// </summary>
         protected override void OnUpdate()
         {
-            if (!_isEnabled)
+            if (!NoEquipmentDurabilityLoss.Instance.IsEnabled)
             {
                 return;
             }

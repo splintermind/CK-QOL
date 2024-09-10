@@ -1,54 +1,64 @@
-using CK_QOL_Collection.Core.Feature;
 using Inventory;
 using Unity.Entities;
 using Unity.NetCode;
 
-namespace CK_QOL_Collection.Features.NoDeathPenalty.Systems
+namespace CK_QOL.Features.NoDeathPenalty.Systems
 {
     /// <summary>
-    ///     Represents a system that disables the death penalty in the game.
-    ///     This system ensures that the player's inventory is not lost upon death.
+    ///     Represents the system responsible for preventing inventory loss due to player death within the game's server-side simulation.
+    ///     This system operates by disabling components that trigger inventory movement on player death, ensuring that the player's inventory is not transferred or lost when they die.
+    ///     
+    ///     The system performs the following functions:
+    ///     <list type="bullet">
+    ///         <item>
+    ///             <description>Disables the <see cref="InitialMoveInventoryFromCD"/> component on relevant entities to prevent inventory movement triggered by player death.</description>
+    ///         </item>
+    ///         <item>
+    ///             <description>Clears references to the entity from which the inventory would normally be moved, ensuring that no unintended inventory transfer occurs.</description>
+    ///         </item>
+    ///     </list>
+    ///     
+    ///     This system is controlled by the <see cref="NoDeathPenalty"/> feature, which provides configuration settings and determines whether the system should be active based on the feature's enabled state.
     /// </summary>
+    /// <remarks>
+    ///     The <see cref="NoDeathPenaltySystem"/> class extends <see cref="PugSimulationSystemBase"/> to integrate with the game's server-side simulation framework,
+    ///     running in the server simulation context to handle inventory management logic in real-time.
+    /// </remarks>
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
     [UpdateAfter(typeof(UpdateHealthSystemGroup))]
     [UpdateBefore(typeof(InitMoveInventorySystem))]
     public partial class NoDeathPenaltySystem : PugSimulationSystemBase
     {
-        /// <summary>
-        ///     Called when the system is created.
-        ///     Ensures that the system requires the <see cref="InventoryChangeBuffer" /> component for execution.
-        /// </summary>
         protected override void OnCreate()
         {
+            if (!NoDeathPenalty.Instance.IsEnabled)
+            {
+                return;
+            }
+            
             base.OnCreate();
 
             RequireForUpdate<InventoryChangeBuffer>();
         }
 
-        /// <summary>
-        ///     Updates the system, disabling inventory changes when a player dies to prevent inventory loss.
-        /// </summary>
         protected override void OnUpdate()
         {
-            var noDeathPenaltyFeature = FeatureManager.Instance.GetFeature<NoDeathPenaltyFeature>();
-            if (noDeathPenaltyFeature is not { IsEnabled: true })
+            if (!NoDeathPenalty.Instance.IsEnabled)
             {
                 return;
             }
             
             var initialMoveInventoryFromLookup = GetComponentLookup<InitialMoveInventoryFromCD>();
 
-            // Move GetComponentLookup inside the job to ensure the lookup is up-to-date.
             Entities
                 .WithAll<InitialMoveInventoryFromCD>()
                 .ForEach((Entity entity, ref InitialMoveInventoryFromCD initialMoveInventoryFromCD) =>
                 {
-                    // Disable the component to prevent further inventory movement on death.
                     initialMoveInventoryFromLookup.SetComponentEnabled(entity, false);
-                    // Set the entityFrom field to null to ensure no inventory movement occurs.
                     initialMoveInventoryFromCD.entityFrom = Entity.Null;
-                }).Schedule();
+                })
+                .Schedule();
 
             base.OnUpdate();
         }

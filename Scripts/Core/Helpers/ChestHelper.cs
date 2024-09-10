@@ -3,26 +3,15 @@ using System.Linq;
 using CoreLib.Util.Extensions;
 using UnityEngine;
 
-namespace CK_QOL_Collection.Core.Helpers
+namespace CK_QOL.Core.Helpers
 {
     /// <summary>
-    ///     Provides helper methods for operations related to chests in the game.
+    ///     Provides helper methods for operations related to chests in-game.
     /// </summary>
     internal static class ChestHelper
 	{
-        /// <summary>
-        ///     The name of the general pool chest in the game scene.
-        /// </summary>
         private const string PoolChestName = "Pool Chest";
-
-        /// <summary>
-        ///     The name of the boss chest pool in the game scene.
-        /// </summary>
         private const string PoolBossChestName = "Pool BossChest";
-
-        /// <summary>
-        ///     The name of the non-paintable chest pool in the game scene.
-        /// </summary>
         private const string PoolNonPaintableChestChestName = "Pool NonPaintableChest";
 
         /// <summary>
@@ -41,8 +30,6 @@ namespace CK_QOL_Collection.Core.Helpers
         ///     It searches across three predefined pools: general pool chests, boss pool chests, and non-paintable chests.
         /// </remarks>
         /// <seealso cref="MathHelpers.IsInRange(Vector3, Vector3, float)" />
-        /// <seealso cref="UnityEngine.GameObject" />
-        /// <seealso cref="UnityEngine.Transform" />
         internal static IEnumerable<Chest> GetNearbyChests(float maxDistance = float.MaxValue)
 		{
 			var player = Manager.main.player;

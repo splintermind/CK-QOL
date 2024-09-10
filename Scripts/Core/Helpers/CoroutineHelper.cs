@@ -1,16 +1,15 @@
 using System.Collections;
 using UnityEngine;
 
-namespace CK_QOL_Collection.Core.Helpers
+namespace CK_QOL.Core.Helpers
 {
 	/// <summary>
-	///		Provides a helper class for running coroutines outside of a MonoBehaviour context.
+	///		Provides a helper class for running coroutines outside a MonoBehaviour context.
 	///		This class ensures that there is always a MonoBehaviour available to handle coroutine operations.
 	/// </summary>
 	public class CoroutineHelper : MonoBehaviour
 	{
-		// Singleton instance of the CoroutineHelper
-		private static CoroutineHelper instance;
+		private static CoroutineHelper _instance;
 
 		/// <summary>
 		///		Gets the singleton instance of the CoroutineHelper.
@@ -20,20 +19,17 @@ namespace CK_QOL_Collection.Core.Helpers
 		{
 			get
 			{
-				// If the instance already exists, return it
-				if (instance != null)
+				if (_instance != null)
 				{
-					return instance;
+					return _instance;
 				}
 
-				// Otherwise, create a new GameObject and attach this component to it
-				var gameObject = new GameObject("CK-QOL-CoroutineHelper");
-				instance = gameObject.AddComponent<CoroutineHelper>();
+				var gameObject = new GameObject($"{ModSettings.ShortName}-{nameof(CoroutineHelper)}");
+				_instance = gameObject.AddComponent<CoroutineHelper>();
                 
-				// Ensure that the GameObject persists across scene changes
 				DontDestroyOnLoad(gameObject);
 
-				return instance;
+				return _instance;
 			}
 		}
 

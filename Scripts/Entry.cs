@@ -1,6 +1,14 @@
-﻿using CK_QOL_Collection.Core;
-using CK_QOL_Collection.Core.Feature;
-using CK_QOL_Collection.Core.Feature.Configuration;
+﻿using System.Collections.Generic;
+using System.Linq;
+using CK_QOL.Core;
+using CK_QOL.Core.Features;
+using CK_QOL.Features.CraftingRange;
+using CK_QOL.Features.ItemPickUpNotifier;
+using CK_QOL.Features.NoDeathPenalty;
+using CK_QOL.Features.NoEquipmentDurabilityLoss;
+using CK_QOL.Features.QuickEat;
+using CK_QOL.Features.QuickHeal;
+using CK_QOL.Features.QuickStash;
 using CoreLib;
 using CoreLib.Localization;
 using CoreLib.RewiredExtension;
@@ -8,93 +16,109 @@ using CoreLib.Util.Extensions;
 using PugMod;
 using Rewired;
 using UnityEngine;
-using Logger = CK_QOL_Collection.Core.Logger;
 
-namespace CK_QOL_Collection
+namespace CK_QOL
 {
-	/// <summary>
-	///     The main entry point for the CK QOL Collection mod. Implements the <see cref="IMod" /> interface for mod lifecycle
-	///     management.
-	/// </summary>
 	public class Entry : IMod
 	{
-		/// <summary>
-		///     Gets the loaded mod information.
-		/// </summary>
-		internal static LoadedMod ModInfo;
-
-		/// <summary>
-		///     Gets the Rewired player instance for input handling.
-		/// </summary>
+		internal static LoadedMod ModInfo { get; private set; }
 		internal static Player RewiredPlayer { get; private set; }
+		
+		private readonly List<IFeature> _features = new();
 
 		#region IMod
 
-		/// <inheritdoc />
 		public void EarlyInit()
 		{
-			Logger.Info($"{ModSettings.Version} - {ModSettings.Author}");
+			ModLogger.Info($"{ModSettings.Name} v{ModSettings.Version} by {ModSettings.Author}");
 
 			ModInfo = this.GetModInfo();
 			if (ModInfo is null)
 			{
-				Logger.Error("Failed to load!");
+				ModLogger.Error("Failed to load!");
 				Shutdown();
 
 				return;
 			}
 
-			// Initialize core modules
 			CoreLibMod.LoadModules(typeof(LocalizationModule));
 			CoreLibMod.LoadModule(typeof(RewiredExtensionModule));
 
 			RewiredExtensionModule.rewiredStart += () => RewiredPlayer = ReInput.players.GetPlayer(0);
 			
-			ConfigurationManager.Initialize(ModInfo);
-			KeyBindManager.Initialize();
+			ModLogger.Info("Loading features..");
 			
-			if (ConfigurationManager.IsModEnabled)
+			_features.AddRange(new IFeature[]
 			{
-				return;
-			}
+				CraftingRange.Instance,
+				QuickStash.Instance,
+				ItemPickUpNotifier.Instance,
+				NoDeathPenalty.Instance,
+				NoEquipmentDurabilityLoss.Instance,
+				QuickHeal.Instance,
+				QuickEat.Instance
+			});
 
-			Logger.Error("Disabled by configuration!");
-			Shutdown();
+			foreach (var feature in _features)
+			{
+				ModLogger.Info($"{feature.DisplayName} ({feature.FeatureType})");
+			}
+			
+			ModLogger.Info(".. all features loaded.");
 		}
 
-		/// <inheritdoc />
 		public void Init()
 		{
-			if (!ConfigurationManager.IsModEnabled)
+			ModLogger.Info("Enabled features with their configuration:");
+
+			foreach (var feature in _features.Where(feature => feature.IsEnabled))
 			{
-				return;
+				switch (feature)
+				{
+					case CraftingRange { IsEnabled: true } craftingRange:
+						ModLogger.Info($"{feature.DisplayName} | {nameof(craftingRange.MaxRange)}: {craftingRange.MaxRange} ");
+						ModLogger.Info($"{feature.DisplayName} | {nameof(craftingRange.MaxChests)}: {craftingRange.MaxChests}");
+						break;
+					case QuickStash { IsEnabled: true } quickStash:
+						ModLogger.Info($"{feature.DisplayName} | {nameof(quickStash.MaxRange)}: {quickStash.MaxRange} ");
+						ModLogger.Info($"{feature.DisplayName} | {nameof(quickStash.MaxChests)}: {quickStash.MaxChests}");
+						break;
+					case ItemPickUpNotifier { IsEnabled: true } itemPickUpNotifier:
+						ModLogger.Info($"{feature.DisplayName} | {nameof(itemPickUpNotifier.AggregateDelay)}: {itemPickUpNotifier.AggregateDelay}");
+						break;
+					case NoDeathPenalty { IsEnabled: true } noDeathPenalty:
+						ModLogger.Info($"{feature.DisplayName}");
+						break;
+					case NoEquipmentDurabilityLoss { IsEnabled: true } noEquipmentDurabilityLoss:
+						ModLogger.Info($"{feature.DisplayName}");
+						break;
+					case QuickHeal { IsEnabled: true } quickHeal:
+						ModLogger.Info($"{feature.DisplayName} | {nameof(quickHeal.EquipmentSlotIndex)}: {quickHeal.EquipmentSlotIndex}");
+						break;
+					case QuickEat { IsEnabled: true } quickEat:
+						ModLogger.Info($"{feature.DisplayName} | {nameof(quickEat.EquipmentSlotIndex)}: {quickEat.EquipmentSlotIndex}");
+						break;
+				}
 			}
 			
-			FeatureManager.Initialize();
-			
-			Logger.Info("Loaded successfully.");
+			ModLogger.Info("Loaded successfully.");
 		}
 
-		/// <inheritdoc />
 		public void Shutdown()
 		{
-			Logger.Info("Shutdown initiated.");
+			ModLogger.Warn("Shutdown initiated.");
 		}
 
-		/// <inheritdoc />
 		public void ModObjectLoaded(Object obj)
 		{
 		}
 
-		/// <inheritdoc />
 		public void Update()
 		{
-			if (!ConfigurationManager.IsModEnabled)
+			foreach (var feature in _features.Where(feature => feature.IsEnabled))
 			{
-				return;
+				feature.Update();
 			}
-
-			FeatureManager.Instance.Update();
 		}
 
 		#endregion IMod
