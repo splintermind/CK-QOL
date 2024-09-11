@@ -46,15 +46,15 @@ global::Unity.Entities.Internal.InternalCompilerInterface.SetComponentEnabledAft
             #line 65 "D:/CK-ModSDK/Assets/CK-QOL/Features/NoEquipmentDurabilityLoss/Systems/NoEquipmentDurabilityLossSystem.cs"
             {
                 #line 66 "D:/CK-ModSDK/Assets/CK-QOL/Features/NoEquipmentDurabilityLoss/Systems/NoEquipmentDurabilityLossSystem.cs"
-                if (equippedObject.ValueRW.containedObject.objectID == ObjectID.None)
+                if (equippedObject.ValueRO.containedObject.objectID is ObjectID.None or ObjectID.CattleCage)
                 #line 67 "D:/CK-ModSDK/Assets/CK-QOL/Features/NoEquipmentDurabilityLoss/Systems/NoEquipmentDurabilityLossSystem.cs"
                 {
                     #line 68 "D:/CK-ModSDK/Assets/CK-QOL/Features/NoEquipmentDurabilityLoss/Systems/NoEquipmentDurabilityLossSystem.cs"
                     continue;
                 }
-                                #line 71 "D:/CK-ModSDK/Assets/CK-QOL/Features/NoEquipmentDurabilityLoss/Systems/NoEquipmentDurabilityLossSystem.cs"
-                
-                if (!global::Unity.Entities.Internal.InternalCompilerInterface.HasComponentAfterCompletingDependency<global::DurabilityCD>(ref __TypeHandle.__DurabilityCD_RO_ComponentLookup, ref this.CheckedStateRef, equippedObject.ValueRW.equipmentPrefab))
+                #line 71 "D:/CK-ModSDK/Assets/CK-QOL/Features/NoEquipmentDurabilityLoss/Systems/NoEquipmentDurabilityLossSystem.cs"
+
+                if (!global::Unity.Entities.Internal.InternalCompilerInterface.HasComponentAfterCompletingDependency<global::DurabilityCD>(ref __TypeHandle.__DurabilityCD_RO_ComponentLookup, ref this.CheckedStateRef, equippedObject.ValueRO.equipmentPrefab))
                 #line 72 "D:/CK-ModSDK/Assets/CK-QOL/Features/NoEquipmentDurabilityLoss/Systems/NoEquipmentDurabilityLossSystem.cs"
                 {
                     #line 73 "D:/CK-ModSDK/Assets/CK-QOL/Features/NoEquipmentDurabilityLoss/Systems/NoEquipmentDurabilityLossSystem.cs"
@@ -62,7 +62,7 @@ global::Unity.Entities.Internal.InternalCompilerInterface.SetComponentEnabledAft
                 }
                                     #line 76 "D:/CK-ModSDK/Assets/CK-QOL/Features/NoEquipmentDurabilityLoss/Systems/NoEquipmentDurabilityLossSystem.cs"
                     
-                var durabilityComponent = global::Unity.Entities.Internal.InternalCompilerInterface.GetComponentAfterCompletingDependency<global::DurabilityCD>(ref __TypeHandle.__DurabilityCD_RO_ComponentLookup, ref this.CheckedStateRef, equippedObject.ValueRW.equipmentPrefab);
+                var durabilityComponent = global::Unity.Entities.Internal.InternalCompilerInterface.GetComponentAfterCompletingDependency<global::DurabilityCD>(ref __TypeHandle.__DurabilityCD_RO_ComponentLookup, ref this.CheckedStateRef, equippedObject.ValueRO.equipmentPrefab);
                 #line 77 "D:/CK-ModSDK/Assets/CK-QOL/Features/NoEquipmentDurabilityLoss/Systems/NoEquipmentDurabilityLossSystem.cs"
                 equippedObject.ValueRW.containedObject.objectData.amount = durabilityComponent.maxDurability;
             }

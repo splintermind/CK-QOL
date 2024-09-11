@@ -123,7 +123,7 @@ var itemsBuffer = containedObjectsBufferLookup[sourceInventory];
 foreach (var item in itemsBuffer)
 						{
 #line 122 "D:\CK-ModSDK\Assets/CK-QOL/Features/ItemPickUpNotifier/Systems/ItemPickUpNotificationSystem.cs"
-if (item.objectData.objectID == ObjectID.None)
+if (item.objectID is ObjectID.None or ObjectID.CattleCage)
 							{
 #line 124 "D:\CK-ModSDK\Assets/CK-QOL/Features/ItemPickUpNotifier/Systems/ItemPickUpNotificationSystem.cs"
 continue;
@@ -242,6 +242,7 @@ cachedPickups[objectIdHash] = (item.amount, rarity, text);
             __query_911957037_0 = 
                 entityQueryBuilder
                     .WithNone<global::EntityDestroyedCD>()
+                    .WithNone<global::CattleCD>()
                     .WithAll<global::Inventory.InventoryChangeBuffer>()
                     .Build(ref state);
             entityQueryBuilder.Reset();
